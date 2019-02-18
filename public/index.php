@@ -6,4 +6,4 @@
  * Time: 21:30
  */
 
-echo 'test33';
+echo 'test';
