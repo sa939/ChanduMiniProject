@@ -25,10 +25,23 @@ class csv
 
         $file = fopen($filename,"r");
 
+        $fieldnames = array();
+        $count = 0;
+
+
+
         while(! feof($file))
         {
             $record = fgetcsv($file);
-            $movierecords[] = movieFactory::create($record);
+            if($count == 0){
+                $fieldnames == $record;
+            }
+            else{
+                $movierecords[] = movieFactory::create($fieldnames, $record);
+
+            }
+
+            $count++;
         }
         fclose($file);
         return $movierecords;
@@ -38,17 +51,26 @@ class csv
 //Movie Object
 
 class movie {
-    public function __construct($record)
+    public function __construct(Array $fieldnames = null, $values = null )
     {
-        print_r($record);
+
+       print_r($fieldnames);
+        print_r($values);
+
+        $this->createProperty();
+    }
+
+    public function createProperty($name = 'first', $value = 'Avengers'){
+        $this->{$name} = $value;
     }
 }
 
 
 //Movie Factory
 class movieFactory {
-    public static function create(Array $array = null) {
-        $record = new movie($array);
+    public static function create(Array $fieldnames = null, Array $values = null) {
+
+        $record = new movie($fieldnames, $values);
 
         return $record;
     }
