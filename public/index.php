@@ -13,65 +13,80 @@ class main
     public static function start($filename)
     {
 
-        $movierecords = csv::getMovieRecords($filename);
-        print_r($movierecords);
-        }
+        $records = csv::getRecords($filename);
+        $table = html::generateTable($records);
+
+    }
 }
-class csv
-{
-
-     public  static  function getMovieRecords($filename)
-    {
-
+class csv {
+    static public function getRecords($filename) {
         $file = fopen($filename,"r");
-
-        $fieldnames = array();
+        $fieldNames = array();
         $count = 0;
-
-
-
         while(! feof($file))
         {
             $record = fgetcsv($file);
-            if($count == 0){
-                $fieldnames == $record;
+            if($count == 0) {
+                $fieldNames = $record;
+            } else {
+                $records[] = movieFactory::create($fieldNames, $record);
             }
-            else{
-                $movierecords[] = movieFactory::create($fieldnames, $record);
-
-            }
-
             $count++;
         }
         fclose($file);
-        return $movierecords;
+        return $records;
     }
 }
 
+
+class html {
+    public static function generateTable($records) {
+        $count = 0;
+        foreach ($records as $record) {
+            if($count == 0) {
+                $array = $record->returnArray();
+                $fields = array_keys($array);
+                $values = array_values($array);
+                print_r($fields);
+                print_r($values);
+            } else {
+                $array = $record->returnArray();
+                $values = array_values($array);
+                print_r($values);
+            }
+            $count++;
+        }
+    }
+}
+
+
 //Movie Object
-
 class movie {
-    public function __construct(Array $fieldnames = null, $values = null )
+    public function __construct(Array $fieldNames = null, $values = null )
     {
+        $record = array_combine($fieldNames, $values);
 
-       print_r($fieldnames);
-        print_r($values);
+        print_r($record);
 
         $this->createProperty();
     }
 
-    public function createProperty($name = 'first', $value = 'Avengers'){
+
+
+    public function returnArray() {
+        $array = (array) $this;
+        return $array;
+    }
+
+    public function createProperty($name = 'first', $value = 'Avengers') {
         $this->{$name} = $value;
     }
 }
 
-
-//Movie Factory
+//Create Movie Object
 class movieFactory {
-    public static function create(Array $fieldnames = null, Array $values = null) {
-
-        $record = new movie($fieldnames, $values);
-
+    public static function create(Array $fieldNames = null, Array $values = null) {
+        $record = new movie($fieldNames, $values);
         return $record;
     }
 }
