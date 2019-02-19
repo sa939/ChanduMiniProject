@@ -14,7 +14,9 @@ class main
     {
 
         $movierecords = csv::getMovieRecords($filename);
-        print_r($movierecords);
+        $record = movieFactory::create($filename);
+
+        print_r($record);
         }
 }
 class csv
@@ -35,5 +37,22 @@ class csv
     }
 }
 
+//Movie Object
+class movie
+{
 
 
+}
+
+
+//Create Movie Object
+class movieFactory {
+
+    public static function create(Array $array = null) {
+        $record = new record();
+
+        return $record;
+
+    }
+
+}
