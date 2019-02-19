@@ -14,31 +14,26 @@ class main
     {
 
         $movierecords = csv::getMovieRecords($filename);
-        $table = table::genMovieTable($movierecords);
-    }
+        print_r($movierecords);
+        }
 }
 class csv
 {
 
-    static public function getMovieRecords($filename)
+     public  static  function getMovieRecords($filename)
     {
 
-        if (($handle  = fopen($filename, "r")) !== FALSE) {
-            $data = array();
-            while ($data = fgetcsv($handle,  '1000',  ',') !== FALSE ){
-                $movierecords[] = $data;
-             }
-            fclose($handle);
+        $file = fopen($filename,"r");
+
+        while(! feof($file))
+        {
+            $record = fgetcsv($file);
+            $movierecords[] = $record;
         }
+        fclose($file);
         return $movierecords;
-
     }
 }
 
-class table {
-    static public function genMovieTable($movierecords){
-        print_r($movierecords);
-    }
 
-}
 
