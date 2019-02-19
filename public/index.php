@@ -13,8 +13,10 @@ class main
     public static function start($filename)
     {
 
-        $records = csv::getRecords($filename);
-        $table = html::generateTable($records);
+        $movierecords = csv::getRecords($filename);
+        $table = html::generateTable($movierecords);
+
+
 
     }
 }
@@ -29,32 +31,22 @@ class csv {
             if($count == 0) {
                 $fieldNames = $record;
             } else {
-                $records[] = movieFactory::create($fieldNames, $record);
+                $movierecords[] = movieFactory::create($fieldNames, $record);
             }
             $count++;
         }
         fclose($file);
-        return $records;
+        return $movierecords;
     }
 }
 
 
 class html {
-    public static function generateTable($records) {
+    public static function generateTable($movierecords) {
         $count = 0;
-        foreach ($records as $record) {
-            if($count == 0) {
-                $array = $record->returnArray();
-                $fields = array_keys($array);
-                $values = array_values($array);
-                print_r($fields);
-                print_r($values);
-            } else {
-                $array = $record->returnArray();
-                $values = array_values($array);
-                print_r($values);
-            }
-            $count++;
+        foreach ($movierecords as $record){
+            $array =  $record->returnArray();
+            print_r($array);
         }
     }
 }
@@ -65,24 +57,26 @@ class movie {
     public function __construct(Array $fieldNames = null, $values = null )
     {
         $record = array_combine($fieldNames, $values);
+        foreach ($record as $property => $value) {
+            $this->createProperty($property, $value);
+        }
 
-        print_r($record);
-
-        $this->createProperty();
     }
-
-
 
     public function returnArray() {
         $array = (array) $this;
         return $array;
     }
 
-    public function createProperty($name = 'first', $value = 'Avengers') {
+
+
+
+
+
+    public function createProperty($name = 'first', $value = 'keith') {
         $this->{$name} = $value;
     }
 }
-
 //Create Movie Object
 class movieFactory {
     public static function create(Array $fieldNames = null, Array $values = null) {
