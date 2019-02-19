@@ -6,67 +6,39 @@
  * Time: 21:30
  */
 
-main::start();
+main::start($filename= "movies.csv");
 
-class main {
-    static public function start(){
-        $records = csv::getRecords();
-        $table = html::generateTable($records);
-        system::printPage($table);
-    }
-}
-
-class csv {
-    static public function getRecords(){
-
-        $make = 'ford';
-        $model = 'taurus';
-        $car = AutomobileFactory::create($make, $model);
-
-        $records[] = $car;
-        print_r($records);
-
-        return $records;
-    }
-}
-
-class html {
-    static public function generateTable($records){
-
-        $table = $records;
-
-        return $table;
-    }
-}
-
-class system {
-    static public function printPage($page){
-
-        echo $page;
-    }
-}
-
-class Automobile
+class main
 {
-    private $vehicleMake;
-    private $vehicleModel;
-
-    public function __construct($make, $model)
+    public static function start($filename)
     {
-        $this->vehicleMake = $make;
-        $this->vehicleModel = $model;
-    }
 
-    public function getMakeAndModel()
-    {
-        return $this->vehicleMake . ' ' . $this->vehicleModel;
+        $movierecords = csv::getMovieRecords($filename);
+        $table = table::genMovieTable($movierecords);
     }
 }
-
-class AutomobileFactory
+class csv
 {
-    public static function create($make, $model)
+
+    static public function getMovieRecords($filename)
     {
-        return new Automobile($make, $model);
+
+        if (($handle  = fopen($filename, "r")) !== FALSE) {
+            $data = array();
+            while ($data = fgetcsv($handle,  '1000',  ',') !== FALSE ){
+                $movierecords[] = $data;
+             }
+            fclose($handle);
+        }
+        return $movierecords;
+
     }
 }
+
+class table {
+    static public function genMovieTable($movierecords){
+        print_r($movierecords);
+    }
+
+}
+
