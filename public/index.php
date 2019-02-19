@@ -15,7 +15,7 @@ class main
 
         $movierecords = csv::getRecords($filename);
         $table = html::generateTable($movierecords);
-
+        html::returnTable($table);
 
 
     }
@@ -42,16 +42,69 @@ class csv {
 
 
 class html {
-    public static function generateTable($movierecords) {
+
+    public static function movietablerow($row) {
+       $html = "<tr> $row </tr>";
+       return $html;
+    }
+
+    public static function movietablecol($col) {
+        $html = "<th> $col </th>";
+        return $html;
+    }
+
+    public static function returnTable($table) {
+        print_r($table);
+       return   "<table> $table </table>";
+        }
+
+
+
+    public static function generateTable($records) {
         $count = 0;
-        foreach ($movierecords as $record){
-            $array =  $record->returnArray();
-            print_r($array);
+        foreach ($records as $record) {
+            if($count == 0) {
+
+                $html = '<table>';
+                //Row 1: Array Keys (Headings)
+                $array = $record->returnArray();
+                $fields = array_keys($array);
+                $values = array_values($array);
+
+                foreach ($array as $key=>$value){
+                    $tableheaders[] = html::createth($key);
+
+                }
+
+               // print_r($html);
+
+            } else {
+                $array = $record->returnArray();
+                $values = array_values($array);
+                foreach ($array as $key=>$value){
+                //    $tablerows[] = html::createtr($key);
+                }
+
+              //  print_r($values);
+            }
+            $count++;
         }
     }
+
+
+
+    public static function createth($key)
+    {
+        // MOVIE HEADERS
+        $html = '<th>' .htmlspecialchars($key) . '</th>';
+
+        print_r($html);
+    }
+
+
+
+
 }
-
-
 //Movie Object
 class movie {
     public function __construct(Array $fieldNames = null, $values = null )
