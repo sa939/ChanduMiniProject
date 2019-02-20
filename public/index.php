@@ -46,18 +46,10 @@ class csv {
 
 class html {
 
-    public static function movietablerow($row) {
-       $html = "<tr> $row </tr>";
-       return $html;
-    }
 
-    public static function movietablecol($col) {
-        $html = "<th> $col </th>";
-        return $html;
-    }
 
     public static function returnTable($table) {
-        print_r($table);
+     //   print_r($table);
        return   "<table> $table </table>";
         }
 
@@ -65,20 +57,23 @@ class html {
 
     public static function generateTable($movierecords) {
         $count = 0;
-        $html = '<table>';
+
+        $html = "<table class= 'table table-striped table-dark'>";
+
+        print_r($html);
 
         foreach ($movierecords as $record) {
 
 
             if($count == 0) {
 
+
                 $array = $record->returnArray();
                 $fields = array_keys($array);
                 $values = array_values($array);
 
-                $tableheaders[] = html::createth($array);
-
-                $tableheaders[] = html::createtr($values);
+                $html = html::createth($array);
+                $html = html::createtr($values);
 
 
 
@@ -87,22 +82,19 @@ class html {
                 $fields = array_keys($movierecords);
 
                  $values = array_values($array);
-            //    print_r($values);
-              //  $tableheaders[] = html::createtr($values);
 
-                $tableheaders[] = html::createtr($values);
+                $html = html::createtr($values);
 
             }
 
             $count++;
 
 
-
-
         }
 
         $html .= '</table>';
         print_r($html);
+
     }
 
 
@@ -121,35 +113,28 @@ class html {
     }
 
 
-    public static function createtr($array)
-    {
-        $movietr = '<tr>';
-
-        foreach ($array as $key){
-            $movietr .= '<td>' .($key) . '</td>';
-
-        }
-        $movietr .= '</tr>';
-        print_r($movietr);
-
-    }
-
-
 
     public static function createtd($key)
     {
         // MOVIE COLUMNS
         $movietd = '<td>' .htmlspecialchars($key) . '</td>';
-
         print_r($movietd);
     }
 
 
-
-
-
+   public static function createtr($array)
+   {
+       $movietr = '<tr>';
+       foreach ($array as $key){
+           $movietr .= '<td>' .($key) . '</td>';
+       }
+       $movietr .= '</tr>';
+       print_r($movietr);
+   }
 
 }
+
+
 //Movie Object
 class movie {
     public function __construct(Array $fieldNames = null, $values = null )
@@ -172,6 +157,8 @@ class movie {
         $this->{$name} = $value;
     }
 }
+
+
 
 
 //Create Movie Object
